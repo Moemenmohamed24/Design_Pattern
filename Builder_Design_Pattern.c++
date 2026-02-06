@@ -135,5 +135,226 @@ o	لو ضفت خاصية جديدة، ما تكسرش أي حاجة موجودة
 •	يمكن عمل objects immutable:
 o	بعد الـ build، ما يتغيرش.
 
+مثال :
+
+
+ #include <iostream>
+#include <vector>
+
+
+using namespace std;
+
+class PersonBuilder;
+class Person
+{
+
+private:
+	const string firstName;
+	const string lastName;
+	const int    age;
+
+	const string gender;
+	const string nationality;
+
+
+	const string email;
+	const string phone;
+	const string country;
+
+	const string jop;
+
+
+
+private:
+
+	Person(const PersonBuilder& builder);
+
+
+	friend class PersonBuilder;
+
+
+
+	const string& getFirstName() const {
+		return firstName;
+	}
+
+	const string& getLastName() const {
+		return lastName;
+	}
+
+	int getAge() const {
+		return age;
+	}
+
+	const string& getGender() const {
+		return gender;
+	}
+
+	const string& getNationality() const {
+		return nationality;
+	}
+
+
+	const string& getEmail() const {
+		return email;
+	}
+
+	const string& getPhone() const {
+		return phone;
+	}
+
+	const string& getCountry() const {
+		return country;
+	}
+
+
+	const string& getJob() const {
+		return jop;
+	}
+public:
+
+	void Display()
+	{
+		cout << "firstName = " << firstName << endl;
+
+		cout << "lastName = " << lastName << endl;
+
+		cout << "age = " << age << endl;
+
+		cout << "gender = " << gender << endl;
+
+		cout << "nationality = " << nationality << endl;
+
+		cout << "email = " << email << endl;
+
+		cout << "phone = " << phone << endl;
+
+		cout << "country = " << country << endl;
+
+		cout << "jop = " << jop << endl;
+
+	}
+
+};
+
+
+class PersonBuilder
+{
+private:
+	string _firstName;
+	string _lastName;
+	int _age;
+
+	string gender = "";
+	string nationality;
+
+
+	string email = "";
+	string phone = "";
+	string country = "";
+
+	string jop = "";
+
+public:
+
+	//the main info that be in any person
+	PersonBuilder(string firstName, string lastName, int age) : _firstName(firstName), _lastName(lastName), _age(age) {}
+
+
+public:
+
+	PersonBuilder& setgender(string gender)
+	{
+		this->gender = gender;
+		return *this;
+	}
+
+	PersonBuilder setnationality(string nationality)
+	{
+		this->nationality = nationality;
+		return *this;
+	}
+
+	PersonBuilder setemail(string email)
+	{
+		this->email = email;
+		return *this;
+	}
+
+	PersonBuilder setphone(string phone)
+	{
+		this->phone = phone;
+		return *this;
+	}
+
+	PersonBuilder setcountry(string country)
+	{
+		this->country = country;
+		return *this;
+	}
+
+	PersonBuilder setjop(string jop)
+	{
+		this->jop = jop;
+		return *this;
+	}
+
+	Person builder()
+	{
+		if (_age < 18 && _age > 60)
+		{
+			throw invalid_argument("age is not correct");
+		}
+
+		if (nationality == "israel")
+		{
+			throw invalid_argument("there is not country that have this name , just Palestine");
+		}
+
+
+		if (!email.empty() || email.find("@"))
+		{
+			throw invalid_argument("email is not correct");
+		}
+
+		//وممكن اكمل اني اعمل اي تحقيق علي اي حاجه مهما كانت علشان لو حاجه واحده بس غلط ما اعملش اوبجيكت 
+
+		return Person(*this);
+	}
+
+	friend class Person;
+};
+//بعمل الحته دي او بحط كل المتغيرات المتوفره اللي عملتها في البيرسون وعلي حسب بقا اللي جاي من البلدر المتغيرات اللي جايه من البلدر بتتحط هنا والباقي مش بيستخدم 
+Person::Person(const PersonBuilder& builder) :
+	firstName(builder._firstName),
+	lastName(builder._lastName),
+	age(builder._age),
+	gender(builder.gender),
+	nationality(builder.nationality),
+	email(builder.email),
+	phone(builder.phone),
+	country(builder.country),
+	jop(builder.jop) {
+}
+
+
+
+
+int main()
+{
+	PersonBuilder builder = PersonBuilder("Moemen ", " mohamed", 20);
+	builder.setemail("mohamed@student.com");
+	builder.setcountry("egypt");
+	builder.setgender("mail");
+	builder.setjop("SWE");
+	builder.setnationality("egyption");
+	builder.setphone("0173354665");
+
+
+	Person student = builder.builder();
+	student.Display();
+}
+
+
 
  
